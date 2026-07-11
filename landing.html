@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SI PRESTISE - Sistem Presensi Siswa Terintegrasi dan Efektif</title>
+    <link rel="icon" type="image/png" href="Logosiprestise.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    
+    <style>
+        html { scroll-behavior: smooth; }
+        .pattern-bg {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        /* Penyesuaian pattern untuk dark mode */
+        .dark .pattern-bg {
+            background-color: #0f172a;
+            background-image: radial-gradient(#1e293b 1px, transparent 1px);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans transition-colors duration-300 dark:bg-slate-900 dark:text-slate-200">
+
+    <nav class="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-800 fixed w-full z-50 top-0 left-0 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                
+                <!-- Kiri: Logo dan Judul -->
+                <!-- Gap dikecilkan di HP (gap-2), normal di laptop (md:gap-3) -->
+                <div class="flex items-center gap-2 md:gap-3">
+                    <!-- Ukuran logo dikecilkan di HP (h-10), normal di laptop (md:h-14) -->
+                    <img src="Logosiprestise.png" alt="Logo SI PRESTISE" class="h-10 md:h-14 w-auto object-contain drop-shadow-md">
+                    <div class="flex flex-col">
+                        <!-- Ukuran font teks dikecilkan di HP (text-lg), normal di laptop (md:text-2xl) -->
+                        <span class="font-bold text-lg md:text-2xl tracking-wide text-blue-900 dark:text-blue-400 leading-none">SI PRESTISE</span>
+                    </div>
+                </div>
+
+                <!-- Tengah: Menu Navigasi (Hanya muncul di laptop/tablet) -->
+                <div class="hidden md:flex items-center gap-8 font-medium text-slate-600 dark:text-slate-300">
+                    <a href="#tentang" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Tentang</a>
+                    <a href="#alur" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Alur Sistem</a>
+                    <a href="#bisnis" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Peluang Bisnis</a>
+                </div>
+
+                <!-- Kanan: Tombol Tema & Login -->
+                <!-- Gap dikecilkan di HP (gap-2), normal di laptop (md:gap-4) -->
+                <div class="flex items-center gap-2 md:gap-4">
+                    <!-- Tombol Tema: Padding disesuaikan -->
+                    <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm p-2 md:p-2.5 transition">
+                        <i id="theme-toggle-dark-icon" class="fa-solid fa-moon hidden text-xl text-blue-900 dark:text-blue-300"></i>
+                        <i id="theme-toggle-light-icon" class="fa-solid fa-sun hidden text-xl text-yellow-400"></i>
+                    </button>
+
+                    <!-- Tombol Login: Padding dan teks dikecilkan di HP -->
+                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 md:px-6 py-2 md:py-2.5 rounded-full font-semibold text-sm md:text-base shadow-md transition flex items-center gap-1.5 md:gap-2 border border-blue-500">
+                        <i class="fa-solid fa-right-to-bracket"></i> <span>Login</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative pt-36 pb-24 px-4 text-center overflow-hidden min-h-[600px] flex items-center justify-center">
+        <div class="absolute inset-0 z-0 bg-slate-900">
+            <img src="dokumentasi1.jpeg" alt="Dokumentasi 1" class="hero-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-100">
+            <img src="dokumentasi2.jpeg" alt="Dokumentasi 2" class="hero-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0">
+            <img src="dokumentasi3.jpeg" alt="Dokumentasi 3" class="hero-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0">
+            <img src="dokumentasi4.jpeg" alt="Dokumentasi 4" class="hero-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0">
+            <img src="dokumentasi5.jpeg" alt="Dokumentasi 5" class="hero-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0">
+            <img src="dokumentasi6.jpeg" alt="Dokumentasi 6" class="hero-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0">
+            
+            <div class="absolute inset-0 bg-blue-950/70 mix-blend-multiply"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-slate-900 via-transparent to-transparent"></div>
+        </div>
+
+        <button id="prevSlide" class="absolute left-4 md:left-8 top-1/2 transform -translate-y-1/2 z-20 bg-white/10 hover:bg-white/30 text-white p-3 md:p-4 rounded-full backdrop-blur-sm transition cursor-pointer border border-white/20">
+            <i class="fa-solid fa-chevron-left text-xl md:text-2xl"></i>
+        </button>
+        <button id="nextSlide" class="absolute right-4 md:right-8 top-1/2 transform -translate-y-1/2 z-20 bg-white/10 hover:bg-white/30 text-white p-3 md:p-4 rounded-full backdrop-blur-sm transition cursor-pointer border border-white/20">
+            <i class="fa-solid fa-chevron-right text-xl md:text-2xl"></i>
+        </button>
+        
+        <div class="max-w-4xl mx-auto relative z-10">
+            <h1 class="text-4xl md:text-6xl font-extrabold mt-6 tracking-tight leading-tight text-white drop-shadow-lg">
+                Sistem Presensi Siswa <br class="hidden md:block">Terintegrasi dan Efektif
+            </h1>
+            <p class="mt-6 text-lg md:text-xl text-blue-50 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
+                Presensi modern berbasis <strong>RFID, IoT, Google Sheets, n8n, dan Telegram</strong>.
+            </p>
+            <div class="mt-10 flex justify-center gap-4">
+                <a href="#tentang" class="bg-blue-600 text-white px-8 py-3.5 rounded-full font-bold shadow-lg hover:bg-blue-700 transition border border-blue-500">
+                    Pelajari Lebih Lanjut
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section id="tentang" class="scroll-mt-18 py-20 pattern-bg transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-blue-900 dark:text-blue-400">Presensi Cerdas,<br><span class="text-blue-600 dark:text-blue-300">Sekolah Berkualitas.</span></h2>
+                    
+                    <p class="mt-6 text-slate-600 dark:text-slate-300 leading-relaxed text-justify">
+                        Kekhawatiran orang tua terhadap keselamatan dan keberadaan anak di sekolah merupakan salah satu permasalahan yang kerap dijumpai dalam kehidupan sehari-hari masyarakat Indonesia. Tidak sedikit orang tua yang merasa resah dan bertanya-tanya apakah anak mereka benar-benar berangkat dan hadir di sekolah, ataukah pergi ke tempat lain tanpa sepengetahuan orang tua.
+                        <br><br>Berdasarkan data Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi Republik Indonesia, tingkat ketidakhadiran siswa di sekolah menjadi salah satu indikator yang berpengaruh terhadap capaian pembelajaran yang berpotensi meningkatkan risiko putus sekolah dan menurunnya prestasi akademik.
+                    </p>
+                    
+                    <p class="mt-4 text-slate-700 dark:text-slate-200 leading-relaxed text-justify font-medium border-l-4 border-blue-500 pl-4 bg-white dark:bg-slate-800 p-4 rounded-r-xl shadow-sm transition-colors duration-300">
+                       SI PRESTISE dirancang untuk menggantikan pencatatan presensi konvensional. Sistem ini menjamin integritas data dan memberikan kemudahan <strong>monitoring</strong> langsung bagi sekolah dan wali murid.
+                       <br><br>Lebih dari sekadar alat pencatat kehadiran, inovasi ini secara khusus diciptakan untuk <strong>meminimalisir kekhawatiran orang tua</strong> terhadap keberadaan dan keselamatan anak mereka di sekolah. Dengan adanya transparansi dan notifikasi langsung, rasa percaya wali murid akan tumbuh secara alami, yang pada akhirnya akan <strong>meningkatkan kredibilitas dan reputasi sekolah</strong> sebagai institusi yang peduli, modern, dan profesional.
+                    </p>
+
+                    <ul class="mt-8 space-y-4 text-slate-700 dark:text-slate-300 font-medium">
+                        <li class="flex items-center gap-3">
+                            <div class="bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 p-1.5 rounded-full"><i class="fa-solid fa-check text-sm"></i></div>
+                            <span>Disiplin</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <div class="bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 p-1.5 rounded-full"><i class="fa-solid fa-check text-sm"></i></div>
+                            <span>Aman</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <div class="bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 p-1.5 rounded-full"><i class="fa-solid fa-check text-sm"></i></div>
+                            <span>Transparan</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 text-center transition-colors duration-300">
+                        <i class="fa-solid fa-bolt text-3xl text-blue-600 dark:text-blue-400 mb-3"></i>
+                        <h4 class="font-bold text-blue-900 dark:text-blue-300">Real-Time</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Data kehadiran tercatat dalam hitungan detik.</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 text-center transition-colors duration-300">
+                        <i class="fa-solid fa-paper-plane text-3xl text-blue-600 dark:text-blue-400 mb-3"></i>
+                        <h4 class="font-bold text-blue-900 dark:text-blue-300">Notifikasi Telegram</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Orang tua mendapatkan informasi kehadiran secara otomatis.</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 text-center transition-colors duration-300">
+                        <i class="fa-solid fa-cloud text-3xl text-blue-600 dark:text-blue-400 mb-3"></i>
+                        <h4 class="font-bold text-blue-900 dark:text-blue-300">Cloud Database</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Data tersimpan aman dan mudah diakses.</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 text-center transition-colors duration-300">
+                        <i class="fa-solid fa-network-wired text-3xl text-blue-600 dark:text-blue-400 mb-3"></i>
+                        <h4 class="font-bold text-blue-900 dark:text-blue-300">Otomasi n8n</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Workflow berjalan otomatis tanpa kode rumit.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="alur" class="scroll-mt-24 pt-0 pb-12 -mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
+        <div class="bg-white dark:bg-slate-800 rounded-[2rem] shadow-xl border border-slate-100 dark:border-slate-700 p-6 md:p-8 relative overflow-hidden transition-colors duration-300">
+            
+            <div class="flex items-center justify-center mb-8">
+                <div class="w-8 md:w-16 h-0.5 bg-blue-600"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
+                <h3 class="bg-blue-600 text-white font-bold text-lg md:text-xl px-6 py-1.5 rounded-full mx-2 md:mx-4 shadow-md uppercase tracking-wider">
+                    Alur Sistem
+                </h3>
+                <div class="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
+                <div class="w-8 md:w-16 h-0.5 bg-blue-600"></div>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 relative z-10">
+                
+                <div class="flex flex-col items-center text-center max-w-[150px]">
+                    <div class="w-20 h-20 rounded-full border-2 border-slate-100 dark:border-slate-700 flex items-center justify-center bg-white dark:bg-slate-900 shadow-sm mb-3 group hover:border-blue-500 transition duration-300">
+                        <i class="fa-solid fa-id-card-clip text-3xl text-blue-600 dark:text-blue-400 group-hover:scale-110 transition"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900 dark:text-slate-200 text-xs md:text-sm mb-1 uppercase tracking-wide">Tempel Kartu RFID</h4>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-snug">Siswa menempelkan kartu pada reader.</p>
+                </div>
+
+                <div class="text-blue-600 dark:text-blue-400 text-xl md:text-2xl">
+                    <i class="fa-solid fa-caret-down md:hidden"></i>
+                    <i class="fa-solid fa-caret-right hidden md:block"></i>
+                </div>
+
+                <div class="flex flex-col items-center text-center max-w-[150px]">
+                    <div class="w-20 h-20 rounded-full border-2 border-slate-100 dark:border-slate-700 flex items-center justify-center bg-white dark:bg-slate-900 shadow-sm mb-3 group hover:border-green-500 transition duration-300">
+                        <i class="fa-solid fa-file-excel text-3xl text-green-500 dark:text-green-400 group-hover:scale-110 transition"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900 dark:text-slate-200 text-xs md:text-sm mb-1 uppercase tracking-wide">Google Sheets</h4>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-snug">Data kehadiran tersimpan real-time di cloud.</p>
+                </div>
+
+                <div class="text-blue-600 dark:text-blue-400 text-xl md:text-2xl">
+                    <i class="fa-solid fa-caret-down md:hidden"></i>
+                    <i class="fa-solid fa-caret-right hidden md:block"></i>
+                </div>
+
+                <div class="flex flex-col items-center text-center max-w-[150px]">
+                    <div class="w-20 h-20 rounded-full border-2 border-slate-100 dark:border-slate-700 flex items-center justify-center bg-white dark:bg-slate-900 shadow-sm mb-3 group hover:border-rose-500 transition duration-300">
+                        <i class="fa-solid fa-share-nodes text-3xl text-rose-500 dark:text-rose-400 group-hover:scale-110 transition"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900 dark:text-slate-200 text-xs md:text-sm mb-1 uppercase tracking-wide">N8N Automation</h4>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-snug">N8n memproses data dan menentukan status.</p>
+                </div>
+
+                <div class="text-blue-600 dark:text-blue-400 text-xl md:text-2xl">
+                    <i class="fa-solid fa-caret-down md:hidden"></i>
+                    <i class="fa-solid fa-caret-right hidden md:block"></i>
+                </div>
+
+                <div class="flex flex-col items-center text-center max-w-[150px]">
+                    <div class="w-20 h-20 rounded-full border-2 border-slate-100 dark:border-slate-700 flex items-center justify-center bg-white dark:bg-slate-900 shadow-sm mb-3 group hover:border-sky-500 transition duration-300">
+                        <i class="fa-brands fa-telegram text-3xl text-sky-500 dark:text-sky-400 group-hover:scale-110 transition"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900 dark:text-slate-200 text-xs md:text-sm mb-1 uppercase tracking-wide">Telegram Orang Tua</h4>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-snug">Notifikasi kehadiran dikirim secara otomatis.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="bisnis" class="scroll-mt-24 bg-blue-800 text-white py-20 relative overflow-hidden transition-colors duration-300 dark:bg-blue-950">
+        <div class="absolute inset-0 opacity-10 pattern-bg"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="bg-blue-900 text-white px-6 py-2 rounded-full font-bold text-sm tracking-widest uppercase shadow-inner border border-blue-700">
+                    Peluang Pengembangan
+                </span>
+            </div>
+            
+            <div class="bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-3xl p-8 md:p-12 shadow-2xl flex flex-col md:flex-row gap-8 items-center border-b-8 border-blue-500 transition-colors duration-300">
+                <div class="bg-blue-50 dark:bg-slate-700 p-6 rounded-2xl text-blue-600 dark:text-blue-400 flex-shrink-0 transition-colors">
+                    <i class="fa-solid fa-wallet text-6xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl md:text-3xl font-extrabold text-blue-900 dark:text-blue-300 mb-4">Integrasi Pembayaran Sekolah</h3>
+                    <p class="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
+                        Sistem dapat dikembangkan dengan pembayaran sekolah berbasis tabungan untuk mempermudah transaksi pembayaran secara instan dan digital.
+                    </p>
+                    <ul class="space-y-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-blue-500"></i> Terintegrasi dengan sistem presensi</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-blue-500"></i> Saldo tersimpan dengan aman</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-blue-500"></i> Pembayaran dapat dipantau secara real-time</li>
+                    </ul>
+                </div>
+            </div>
+            <br>
+                <div class="bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-3xl p-8 shadow-xl border-b-4 border-rose-500 transition-colors duration-300 hover:-translate-y-2 transform">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="bg-rose-50 dark:bg-slate-700 p-4 rounded-xl text-rose-600 dark:text-rose-400">
+                            <i class="fa-solid fa-gears text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-extrabold text-rose-900 dark:text-rose-300">Otomasi Administrasi Akademik</h3>
+                    </div>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                        Ekspansi alur <strong>workflow</strong> untuk mencetak Surat Peringatan (SP) secara otomatis dan memblokir akses ujian jika persentase kehadiran kurang.
+                    </p>
+                </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-900 text-slate-400 text-center py-12 border-t-4 border-blue-600">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-2xl font-bold text-white mb-2">Kehadiran adalah langkah awal <span class="text-blue-500">menuju prestasi.</span></h2>
+            <p class="mt-6 text-sm">
+                &copy; 2026 Tim Proyek SI PRESTISE. All Rights Reserved.<br>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- LOGIKA SLIDER HERO ---
+            const slides = document.querySelectorAll('.hero-slide');
+            const prevBtn = document.getElementById('prevSlide');
+            const nextBtn = document.getElementById('nextSlide');
+            let currentSlide = 0;
+            let slideInterval;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    if (i === index) {
+                        slide.classList.remove('opacity-0');
+                        slide.classList.add('opacity-100');
+                    } else {
+                        slide.classList.remove('opacity-100');
+                        slide.classList.add('opacity-0');
+                    }
+                });
+            }
+
+            function nextSlideFunc() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            function prevSlideFunc() {
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            if(nextBtn && prevBtn) {
+                nextBtn.addEventListener('click', () => {
+                    nextSlideFunc();
+                    resetInterval();
+                });
+                prevBtn.addEventListener('click', () => {
+                    prevSlideFunc();
+                    resetInterval();
+                });
+            }
+
+            function startInterval() {
+                slideInterval = setInterval(nextSlideFunc, 5000);
+            }
+
+            function resetInterval() {
+                clearInterval(slideInterval);
+                startInterval();
+            }
+            startInterval(); // Mulai slider
+
+
+            // --- LOGIKA DARK MODE TOGGLE ---
+            var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+            var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+            var themeToggleBtn = document.getElementById('theme-toggle');
+
+            if (!themeToggleDarkIcon || !themeToggleLightIcon || !themeToggleBtn) return; 
+
+            // Cek status saat dimuat
+            if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                themeToggleLightIcon.classList.remove('hidden');
+                document.documentElement.classList.add('dark');
+            } else {
+                themeToggleDarkIcon.classList.remove('hidden');
+                document.documentElement.classList.remove('dark');
+            }
+
+            // Fungsi saat tombol diklik
+            themeToggleBtn.addEventListener('click', function() {
+                themeToggleDarkIcon.classList.toggle('hidden');
+                themeToggleLightIcon.classList.toggle('hidden');
+
+                if (localStorage.getItem('color-theme')) {
+                    if (localStorage.getItem('color-theme') === 'light') {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    }
+                } else {
+                    if (document.documentElement.classList.contains('dark')) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    }
+                }
+            });
+            
+        });
+    </script>
+</body>
+</html>

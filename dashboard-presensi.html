@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard SI PRESTISE</title>
+    <link rel="icon" type="image/png" href="Logosiprestise.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+   <script>
+        (function() {
+            // Ubah 'theme' menjadi 'color-theme'
+            const savedTheme = localStorage.getItem('color-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <header class="top-header">
+            <div class="header-left">
+                <img src="Logosiprestise.png" alt="Logo SI PRESTISE" class="brand-logo">
+                <div class="logo-text">
+                    <h1>SI PRESTISE</h1>
+                    <p>Sistem Presensi Siswa</p>
+                    <p>Terintegrasi & Efektif</p>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="filter-tabs">
+                    <button class="filter-btn active" onclick="setFilter('hari', this)">Hari Ini</button>
+                    <button class="filter-btn" onclick="setFilter('minggu', this)">Minggu Ini</button>
+                    <button class="filter-btn" onclick="setFilter('bulan', this)">Bulan Ini</button>
+                </div>
+                <div class="date-picker-container">
+                    <input type="date" id="customDate" onchange="setFilter('custom', null)" title="Pilih Tanggal Spesifik">
+                </div>
+                
+            </div>
+            
+            <div class="header-right">
+                <button class="theme-toggle-dash" id="themeBtn" onclick="toggleTheme()" title="Ubah Tema">🌙</button>
+                <div class="user-info">
+                    <span id="namaUser" style="display: block; font-weight: 700; font-size: 14px;">Nama User</span>
+                    <span id="roleUser" style="display: block; font-size: 12px; opacity: 0.8;">Role</span>
+                </div>
+                <button onclick="prosesLogout()" class="logout-btn">Keluar</button>
+            </div>
+        </header>
+
+        <div class="summary-cards">
+            <div class="card hadir">
+                <div class="card-content">
+                    <h3>Hadir Tepat Waktu</h3>
+                    <h2 id="countHadir">0</h2>
+                </div>
+            </div>
+            <div class="card terlambat">
+                <div class="card-content">
+                    <h3>Terlambat</h3>
+                    <h2 id="countTerlambat">0</h2>
+                </div>
+            </div>
+            <div class="card alpa">
+                <div class="card-content">
+                    <h3>Tidak Hadir</h3>
+                    <h2 id="countAlpa">0</h2>
+                </div>
+            </div>
+        </div>
+
+       <div class="chart-container">
+            <div class="chart-header">
+                <h2>Statistik Kehadiran</h2>
+                
+                <button onclick="downloadRekap()" class="export-btn" title="Unduh Rekap ke Excel">
+                    📥 Unduh Rekap
+                </button>
+            </div>
+            <div class="chart-box">
+                <canvas id="attendanceChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Pengecekan Login & Inisialisasi
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cek Sesi
+            if (sessionStorage.getItem("isLoggedIn") !== "true") {
+                window.location.href = "login.html";
+                return;
+            }
+
+            // Sinkronisasi Ikon Tombol Tema saat halaman dimuat
+            const savedTheme = localStorage.getItem('color-theme') || 'light';
+            const themeBtn = document.getElementById('themeBtn');
+            if(themeBtn) themeBtn.innerText = savedTheme === 'dark' ? '☀️' : '🌙';
+
+            // Data User
+            document.getElementById("namaUser").innerText = sessionStorage.getItem("userName");
+            document.getElementById("roleUser").innerText = sessionStorage.getItem("userRole");
+
+            // Load Data
+            fetchData();
+        });
+
+        function prosesLogout() {
+            Swal.fire({
+                title: 'Apakah Anda Yakin?',
+                text: "Sesi Anda akan diakhiri dan kembali ke halaman login.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#64748b',
+                cancelButtonColor: '#ef4444', 
+                confirmButtonText: 'Ya, Keluar!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                background: document.documentElement.getAttribute('data-theme') === 'dark' ? '#1e293b' : '#ffffff',
+                color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#f8fafc' : '#0f172a'
+            }).then((result) => {
+    
+                if (result.isConfirmed) {
+                    sessionStorage.clear();
+                    window.location.href = "login.html";
+                }
+            });
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('color-theme', newTheme);
+            
+            const btn = document.getElementById('themeBtn');
+            if(btn) btn.innerText = newTheme === 'dark' ? '☀️' : '🌙';
+            
+            if (rawData.length > 0) updateDashboard();
+        }
+
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRG87BnDTWVVHeBM7vI3q07lPEG-3XVBOFQOV971f7yylul77-39FBSpTw_dhK3lT2BFxW77h3iFv4q/pub?gid=1296575993&single=true&output=csv';
+
+        let rawData = [];
+        let myChart;
+        let currentFilter = 'hari';
+        let currentFilteredData = [];
+
+        function fetchData() {
+            fetch(CSV_URL)
+                .then(response => {
+                    if (!response.ok) throw new Error("HTTP " + response.status);
+                    return response.text();
+                })
+                .then(csvText => {
+                    Papa.parse(csvText, {
+                        header: true,
+                        skipEmptyLines: true,
+                        complete: function(results) {
+                            rawData = results.data;
+                            updateDashboard();
+                        }
+                    });
+                })
+                .catch(error => console.error("Gagal terhubung:", error));
+        }
+
+        function setFilter(filterType, btnElement) {
+            currentFilter = filterType;
+            if (btnElement) {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                btnElement.classList.add('active');
+                document.getElementById('customDate').value = '';
+            } else {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            }
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            const customDateInput = document.getElementById('customDate').value;
+            const userKelas = sessionStorage.getItem("userKelas");
+            let filteredData = [];
+            
+            // 1. Tentukan hari ini dan KUNCI waktunya ke jam 00:00:00
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // 2. Hitung hari Senin minggu ini (Cukup hitung SEKALI di luar loop)
+            const firstDayOfWeek = new Date(today);
+            const dayOfWeek = firstDayOfWeek.getDay();
+            
+            // Logika agar jika hari Minggu (0), hitungannya mundur ke Senin sebelumnya, bukan maju
+            const diffToMonday = firstDayOfWeek.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+            firstDayOfWeek.setDate(diffToMonday);
+
+            rawData.forEach(row => {
+                if(!row.Waktu) return;
+                
+                if (userKelas && userKelas !== "Semua" && row.Kelas !== userKelas) return; 
+
+                const rowDate = new Date(row.Waktu); 
+                let isMatch = false;
+
+                if (currentFilter === 'hari') {
+                    // Cukup cocokkan tanggalnya saja (toDateString mengabaikan jam)
+                    if (rowDate.toDateString() === new Date().toDateString()) isMatch = true;
+                } else if (currentFilter === 'minggu') {
+                    // Karena firstDayOfWeek sudah jam 00:00:00, absen pagi hari tidak akan terlewat
+                    if (rowDate >= firstDayOfWeek) isMatch = true;
+                } else if (currentFilter === 'bulan') {
+                    if (rowDate.getMonth() === new Date().getMonth() && rowDate.getFullYear() === new Date().getFullYear()) isMatch = true;
+                } else if (currentFilter === 'custom') {
+                    if (customDateInput && String(row.Waktu).trim().startsWith(customDateInput)) isMatch = true;
+                }
+
+                if(isMatch) filteredData.push(row);
+            });
+            
+            currentFilteredData = filteredData;
+
+            let totalHadir = 0, totalTerlambat = 0, totalAlpa = 0;
+            
+            filteredData.forEach(row => {
+                const status = row.Status ? row.Status.trim() : '';
+                if (status === 'Hadir Tepat Waktu') totalHadir++;
+                else if (status === 'Terlambat') totalTerlambat++;
+                else if (status === 'Tidak Hadir') totalAlpa++;
+            });
+
+            document.getElementById('countHadir').innerText = totalHadir;
+            document.getElementById('countTerlambat').innerText = totalTerlambat;
+            document.getElementById('countAlpa').innerText = totalAlpa;
+
+            let labels = [];
+            let dataHadir = [];
+            let dataTerlambat = [];
+            let dataAlpa = [];
+
+            if (currentFilter === 'bulan') {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = now.getMonth();
+                const daysInMonth = new Date(year, month + 1, 0).getDate(); 
+
+                for (let i = 1; i <= daysInMonth; i++) {
+                    labels.push(i.toString());
+                    dataHadir.push(0);
+                    dataTerlambat.push(0);
+                    dataAlpa.push(0);
+                }
+
+                filteredData.forEach(row => {
+                    const status = row.Status ? row.Status.trim() : '';
+                    const rDate = new Date(row.Waktu);
+                    const dayOfMonth = rDate.getDate();
+                    const index = dayOfMonth - 1;
+
+                    if (status === 'Hadir Tepat Waktu') dataHadir[index]++;
+                    else if (status === 'Terlambat') dataTerlambat[index]++;
+                    else if (status === 'Tidak Hadir') dataAlpa[index]++;
+                });
+
+            } else {
+                labels = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat']; 
+                const groupedByDay = {
+                    'Senin': { hadir: 0, terlambat: 0, alpa: 0 },
+                    'Selasa': { hadir: 0, terlambat: 0, alpa: 0 },
+                    'Rabu': { hadir: 0, terlambat: 0, alpa: 0 },
+                    'Kamis': { hadir: 0, terlambat: 0, alpa: 0 },
+                    'Jumat': { hadir: 0, terlambat: 0, alpa: 0 }
+                };
+                const namaHariArr = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+                filteredData.forEach(row => {
+                    const status = row.Status ? row.Status.trim() : '';
+                    const rDate = new Date(row.Waktu);
+                    const namaHariIni = namaHariArr[rDate.getDay()];
+                    
+                    if (groupedByDay[namaHariIni]) {
+                        if (status === 'Hadir Tepat Waktu') groupedByDay[namaHariIni].hadir++;
+                        else if (status === 'Terlambat') groupedByDay[namaHariIni].terlambat++;
+                        else if (status === 'Tidak Hadir') groupedByDay[namaHariIni].alpa++;
+                    }
+                });
+
+                dataHadir = labels.map(hari => groupedByDay[hari].hadir);
+                dataTerlambat = labels.map(hari => groupedByDay[hari].terlambat);
+                dataAlpa = labels.map(hari => groupedByDay[hari].alpa);
+            }
+
+            drawChart(labels, dataHadir, dataTerlambat, dataAlpa);
+        }
+
+        // FUNGSI MENGGAMBAR GRAFIK (DENGAN LABEL SUMBU X & Y)
+        function drawChart(labels, dataHadir, dataTerlambat, dataAlpa) {
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
+            if (myChart) myChart.destroy(); 
+
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const textColor = isDark ? '#94a3b8' : '#64748b';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+
+            const isBulan = (currentFilter === 'bulan');
+
+            myChart = new Chart(ctx, {
+                type: 'bar', 
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Hadir Tepat Waktu', data: dataHadir, backgroundColor: 'rgba(46, 204, 113, 0.85)', borderRadius: 4 },
+                        { label: 'Terlambat', data: dataTerlambat, backgroundColor: 'rgba(241, 196, 15, 0.85)', borderRadius: 4 },
+                        { label: 'Tidak Hadir', data: dataAlpa, backgroundColor: 'rgba(231, 76, 60, 0.85)', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    indexAxis: isBulan ? 'x' : 'y', 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            display: true, position: 'top',
+                            labels: { color: textColor, font: { family: 'Inter' } } 
+                        } 
+                    },
+                    scales: {
+                        x: {
+                            stacked: true, 
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: isBulan ? 'Tanggal' : 'Jumlah',
+                                color: textColor,
+                                font: { family: 'Inter', weight: '600' }
+                            },
+                            ticks: { 
+                                color: textColor, 
+                                stepSize: isBulan ? undefined : 5, 
+                                precision: 0,
+                                font: { family: 'Inter' }
+                            },
+                            grid: { 
+                                display: !isBulan, 
+                                color: gridColor, 
+                                borderDash: [5, 5] 
+                            }
+                        },
+                        y: {
+                            stacked: true, 
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: isBulan ? 'Jumlah' : 'Hari',
+                                color: textColor,
+                                font: { family: 'Inter', weight: '600' }
+                            },
+                            ticks: { 
+                                color: textColor, 
+                                stepSize: isBulan ? 5 : undefined,
+                                precision: 0,
+                                font: { family: 'Inter', weight: '600' } 
+                            },
+                            grid: { 
+                                display: isBulan, 
+                                color: gridColor, 
+                                borderDash: [5, 5] 
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        fetchData();
+        setInterval(fetchData, 30000); 
+
+        function downloadRekap() {
+            if (currentFilteredData.length === 0) {
+                Swal.fire({
+                    title: 'Data Kosong!',
+                    text: 'Tidak ada data absensi untuk diunduh pada rentang waktu ini.',
+                    icon: 'info',
+                    confirmButtonColor: '#3b82f6',
+                    background: document.documentElement.getAttribute('data-theme') === 'dark' ? '#1e293b' : '#ffffff',
+                    color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#f8fafc' : '#0f172a'
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Unduh Rekap Absensi?',
+                text: "Data akan diunduh dalam format Microsoft Excel (.xlsx)",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, Unduh!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                background: document.documentElement.getAttribute('data-theme') === 'dark' ? '#1e293b' : '#ffffff',
+                color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#f8fafc' : '#0f172a'
+            }).then((result) => {
+                
+                if (result.isConfirmed) {
+                    
+                    const dataUntukExcel = currentFilteredData.map(row => ({
+                        "Waktu": row.Waktu ? row.Waktu : "",
+
+                        "Nama Siswa": row.Nama_Siswa ? row.Nama_Siswa : (row.Nama ? row.Nama : ""), 
+                        "Kelas": row.Kelas ? row.Kelas : "",
+                        "Status Kehadiran": row.Status ? row.Status : ""
+                    }));
+
+                    const worksheet = XLSX.utils.json_to_sheet(dataUntukExcel);
+
+                    worksheet['!cols'] = [
+                        { wch: 28 },
+                        { wch: 35 },
+                        { wch: 15 },
+                        { wch: 25 } 
+                    ];
+
+                    // 2. Mengatur Border, Rata Tengah, & Warna
+                    const range = XLSX.utils.decode_range(worksheet['!ref']);
+                    
+                    for (let R = range.s.r; R <= range.e.r; ++R) {
+                        for (let C = range.s.c; C <= range.e.c; ++C) {
+                            const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+                            if (!worksheet[cellAddress]) continue;
+                            
+                            // A. Inisialisasi wadah style agar tidak error
+                            worksheet[cellAddress].s = worksheet[cellAddress].s || {};
+
+                            // B. MENAMBAHKAN BORDER UNTUK SEMUA SEL (Header maupun Data)
+                            worksheet[cellAddress].s.border = {
+                                top: { style: "thin", color: { rgb: "000000" } },
+                                bottom: { style: "thin", color: { rgb: "000000" } },
+                                left: { style: "thin", color: { rgb: "000000" } },
+                                right: { style: "thin", color: { rgb: "000000" } }
+                            };
+                            
+                            // C. Jika ini adalah baris pertama (Header)
+                            if (R === 0) {
+                                worksheet[cellAddress].s.font = { bold: true };
+                                worksheet[cellAddress].s.alignment = { horizontal: "center", vertical: "center" };
+                            } 
+                            // D. Jika ini adalah baris Data (Siswa)
+                            else {
+                                // Rata tengah untuk kolom Kelas (Indeks 2) dan Status (Indeks 3)
+                                if (C === 2 || C === 3) {
+                                    worksheet[cellAddress].s.alignment = { horizontal: "center", vertical: "center" };
+                                }
+
+                                // Mewarnai sel khusus untuk kolom Status (Indeks 3)
+                                if (C === 3) {
+                                    const nilaiStatus = worksheet[cellAddress].v ? String(worksheet[cellAddress].v).trim() : "";
+                                    
+                                    if (nilaiStatus === 'Hadir Tepat Waktu') {
+                                        worksheet[cellAddress].s.fill = { fgColor: { rgb: "C6EFCE" } };
+                                        worksheet[cellAddress].s.font = { color: { rgb: "006100" }, bold: true };
+                                    } 
+                                    else if (nilaiStatus === 'Terlambat') {
+                                        worksheet[cellAddress].s.fill = { fgColor: { rgb: "FFEB9C" } };
+                                        worksheet[cellAddress].s.font = { color: { rgb: "9C6500" }, bold: true };
+                                    } 
+                                    else if (nilaiStatus === 'Tidak Hadir') {
+                                        worksheet[cellAddress].s.fill = { fgColor: { rgb: "FFC7CE" } };
+                                        worksheet[cellAddress].s.font = { color: { rgb: "9C0006" }, bold: true };
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    const workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap Absensi");
+
+                    const namaKelas = sessionStorage.getItem("userKelas") || "Semua";
+                    const namaFile = `Rekap_Absensi_${namaKelas}_${currentFilter}.xlsx`;
+                    
+                    XLSX.writeFile(workbook, namaFile);
+
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: `File ${namaFile} telah tersimpan dengan rapi.`,
+                        icon: 'success',
+                        timer: 2500,
+                        showConfirmButton: false,
+                        background: document.documentElement.getAttribute('data-theme') === 'dark' ? '#1e293b' : '#ffffff',
+                        color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#f8fafc' : '#0f172a'
+                    });
+                }
+            });
+        }
+        
+    
+    </script>
+</body>
+</html>
