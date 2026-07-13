@@ -7,88 +7,105 @@
     <link rel="icon" type="image/png" href="Logosiprestise.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <script>
         tailwind.config = {
             darkMode: 'class',
+            theme: { extend: {
+                fontFamily: { serif: ['Fraunces', 'serif'], sans: ['Inter', 'sans-serif'] },
+                colors: {
+                    ink: { 50:'#f2f4f8', 100:'#dfe4ee', 300:'#8d9ab5', 500:'#33456e', 700:'#1c2b4d', 800:'#141f38', 900:'#0d1526' },
+                    royal: { 50:'#eef2ff', 100:'#dce4ff', 400:'#5c7ef0', 500:'#3a5fe0', 600:'#2c4bc9', 700:'#233ba3' },
+                    gold: { 50:'#fdf8ec', 100:'#faedc4', 300:'#eecb72', 400:'#e2b64d', 500:'#d4a93a', 600:'#b3872a' },
+                    paper: { 50:'#faf7f0', 100:'#f3eee1' }
+                }
+            } }
         }
     </script>
 
     <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-display { font-family: 'Fraunces', serif; }
         .pattern-bg {
-            background-color: #f8fafc;
-            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-            background-size: 20px 20px;
+            background-color: #faf7f0;
+            background-image: radial-gradient(#e2d9c3 1px, transparent 1px);
+            background-size: 22px 22px;
         }
         .dark .pattern-bg {
-            background-color: #0f172a;
-            background-image: radial-gradient(#1e293b 1px, transparent 1px);
+            background-color: #0d1526;
+            background-image: radial-gradient(#1c2b4d 1px, transparent 1px);
+        }
+        .gold-underline { position: relative; display: inline-block; }
+        .gold-underline::after {
+            content: ''; position: absolute; left: 2px; right: 2px; bottom: -6px; height: 3px;
+            background: linear-gradient(90deg, #d4a93a, #eecb72); border-radius: 2px;
         }
     </style>
 </head>
 <!-- 1. Tambahkan class "flex-col" pada tag body -->
-<body class="pattern-bg min-h-screen flex flex-col items-center justify-center p-4 relative text-slate-800 dark:text-slate-200 transition-colors duration-300">
+<body class="pattern-bg min-h-screen flex flex-col items-center justify-center p-4 relative text-ink-800 dark:text-ink-100 transition-colors duration-300">
 
     <!-- 2. Ganti tombol absolute sebelumnya dengan Container Tombol Atas ini -->
     <div class="w-full max-w-md flex justify-between items-center mb-4 z-10 relative">
         <!-- Tombol Kembali -->
-        <a href="landing.html" class="flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition font-semibold group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md text-sm md:text-base">
+        <a href="landing.html" class="flex items-center gap-2 text-ink-600 dark:text-ink-300 hover:text-royal-600 dark:hover:text-gold-400 transition font-semibold group bg-white/80 dark:bg-ink-800/80 backdrop-blur-sm px-4 py-2 rounded-full border border-ink-100 dark:border-ink-700 shadow-sm hover:shadow-md text-sm md:text-base">
             <i class="fa-solid fa-arrow-left transform group-hover:-translate-x-1 transition"></i>
             Kembali
         </a>
 
         <!-- Tombol Tema -->
-        <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-full p-2.5 md:p-3 transition shadow-sm hover:shadow-md cursor-pointer">
-            <i id="theme-toggle-dark-icon" class="fa-solid fa-moon hidden text-lg text-blue-900 dark:text-blue-300"></i>
-            <i id="theme-toggle-light-icon" class="fa-solid fa-sun hidden text-lg text-yellow-400"></i>
+        <button id="theme-toggle" type="button" class="text-ink-500 dark:text-ink-300 hover:bg-paper-100 dark:hover:bg-ink-700 bg-white/80 dark:bg-ink-800/80 backdrop-blur-sm border border-ink-100 dark:border-ink-700 rounded-full p-2.5 md:p-3 transition shadow-sm hover:shadow-md cursor-pointer">
+            <i id="theme-toggle-dark-icon" class="fa-solid fa-moon hidden text-lg text-royal-600 dark:text-gold-400"></i>
+            <i id="theme-toggle-light-icon" class="fa-solid fa-sun hidden text-lg text-gold-500"></i>
         </button>
     </div>
 
     <!-- 3. Kotak Login Utama -->
-    <div class="bg-white dark:bg-slate-800 p-8 md:p-10 rounded-3xl shadow-2xl w-full max-w-md border border-slate-100 dark:border-slate-700 relative overflow-hidden transition-colors duration-300">
+    <div class="bg-white dark:bg-ink-800 p-8 md:p-10 rounded-3xl shadow-2xl w-full max-w-md border border-ink-100/70 dark:border-ink-700 relative overflow-hidden transition-colors duration-300">
         
-        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-700 to-blue-400"></div>
+        <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-royal-600 via-royal-500 to-gold-400"></div>
 
         <div class="text-center mb-8 mt-2">
             <!-- Logo yang Anda tambahkan sebelumnya -->
             <img src="Logosiprestise.png" alt="Logo SI PRESTISE" class="h-20 md:h-24 w-auto mx-auto object-contain drop-shadow-md mb-4 transition-transform hover:scale-105 duration-300">
             
-            <h1 class="text-2xl font-extrabold text-blue-900 dark:text-blue-300 tracking-wide">SI PRESTISE</h1>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Masuk ke Dasbor Admin Sekolah</p>
+            <h1 class="font-display text-2xl font-semibold text-ink-800 dark:text-paper-50 tracking-wide gold-underline">SI PRESTISE</h1>
+            <p class="text-sm text-ink-500 dark:text-ink-300 mt-3">Masuk ke Dasbor Admin Sekolah</p>
         </div>
 
         <form id="loginForm" class="space-y-5">
             <!-- ... (Sisa kode form Anda di bawah sini biarkan saja seperti sebelumnya) ... -->
             
-            <div id="errorMsg" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative text-sm text-center font-medium" role="alert">
+            <div id="errorMsg" class="hidden bg-red-50 border border-red-300 text-red-700 dark:bg-red-950/50 dark:border-red-800 dark:text-red-300 px-4 py-3 rounded-lg relative text-sm text-center font-medium" role="alert">
                 Username atau Password salah!
             </div>
 
             <div>
-                <label for="username" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Username</label>
+                <label for="username" class="block text-sm font-semibold text-ink-700 dark:text-ink-300 mb-2">Username</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fa-solid fa-user text-slate-400 dark:text-slate-500"></i>
+                        <i class="fa-solid fa-user text-ink-300 dark:text-ink-500"></i>
                     </div>
-                    <input type="text" id="username" class="pl-10 w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm" placeholder="Masukkan Username" required>
+                    <input type="text" id="username" class="pl-10 w-full bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-600 text-ink-900 dark:text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-royal-500 focus:border-royal-500 transition shadow-sm" placeholder="Masukkan Username" required>
                 </div>
             </div>
 
             <div>
-                <label for="password" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Password</label>
+                <label for="password" class="block text-sm font-semibold text-ink-700 dark:text-ink-300 mb-2">Password</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fa-solid fa-lock text-slate-400 dark:text-slate-500"></i>
+                        <i class="fa-solid fa-lock text-ink-300 dark:text-ink-500"></i>
                     </div>
-                    <input type="password" id="password" class="pl-10 pr-12 w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm" placeholder="Masukkan Password" required>
-                    <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer">
+                    <input type="password" id="password" class="pl-10 pr-12 w-full bg-white dark:bg-ink-900 border border-ink-200 dark:border-ink-600 text-ink-900 dark:text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-royal-500 focus:border-royal-500 transition shadow-sm" placeholder="Masukkan Password" required>
+                    <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-ink-300 dark:text-ink-500 hover:text-royal-600 dark:hover:text-gold-400 transition cursor-pointer">
                         <i id="eyeIcon" class="fa-solid fa-eye"></i>
                     </button>
                 </div>
             </div>
 
-            <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 mt-4 flex justify-center items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
+            <button type="submit" id="submitBtn" class="w-full bg-royal-600 hover:bg-royal-700 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 mt-4 flex justify-center items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
                 <span id="btnText">Masuk Sistem</span> 
                 <i id="btnIcon" class="fa-solid fa-arrow-right"></i>
             </button>
