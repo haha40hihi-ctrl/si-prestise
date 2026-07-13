@@ -6,7 +6,7 @@
     <title>Dashboard SI PRESTISE</title>
     <link rel="icon" type="image/png" href="Logosiprestise.png">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
@@ -120,13 +120,13 @@
                 text: "Sesi Anda akan diakhiri dan kembali ke halaman login.",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#64748b',
-                cancelButtonColor: '#ef4444', 
+                confirmButtonColor: '#33456e',
+                cancelButtonColor: '#e0473f', 
                 confirmButtonText: 'Ya, Keluar!',
                 cancelButtonText: 'Batal',
                 reverseButtons: true,
-                background: document.documentElement.getAttribute('data-theme') === 'dark' ? '#1e293b' : '#ffffff',
-                color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#f8fafc' : '#0f172a'
+                background: document.documentElement.getAttribute('data-theme') === 'dark' ? '#141f38' : '#ffffff',
+                color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#faf7f0' : '#141f38'
             }).then((result) => {
     
                 if (result.isConfirmed) {
@@ -308,7 +308,7 @@
             if (myChart) myChart.destroy(); 
 
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            const textColor = isDark ? '#94a3b8' : '#64748b';
+            const textColor = isDark ? '#94a3b8' : '#33456e';
             const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
 
             const isBulan = (currentFilter === 'bulan');
@@ -390,9 +390,9 @@
                     title: 'Data Kosong!',
                     text: 'Tidak ada data absensi untuk diunduh pada rentang waktu ini.',
                     icon: 'info',
-                    confirmButtonColor: '#3b82f6',
-                    background: document.documentElement.getAttribute('data-theme') === 'dark' ? '#1e293b' : '#ffffff',
-                    color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#f8fafc' : '#0f172a'
+                    confirmButtonColor: '#3a5fe0',
+                    background: document.documentElement.getAttribute('data-theme') === 'dark' ? '#141f38' : '#ffffff',
+                    color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#faf7f0' : '#141f38'
                 });
                 return;
             }
@@ -402,13 +402,13 @@
                 text: "Data akan diunduh dalam format Microsoft Excel (.xlsx)",
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonColor: '#10b981',
-                cancelButtonColor: '#64748b',
+                confirmButtonColor: '#22a06b',
+                cancelButtonColor: '#33456e',
                 confirmButtonText: 'Ya, Unduh!',
                 cancelButtonText: 'Batal',
                 reverseButtons: true,
-                background: document.documentElement.getAttribute('data-theme') === 'dark' ? '#1e293b' : '#ffffff',
-                color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#f8fafc' : '#0f172a'
+                background: document.documentElement.getAttribute('data-theme') === 'dark' ? '#141f38' : '#ffffff',
+                color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#faf7f0' : '#141f38'
             }).then((result) => {
                 
                 if (result.isConfirmed) {
@@ -496,8 +496,8 @@
                         icon: 'success',
                         timer: 2500,
                         showConfirmButton: false,
-                        background: document.documentElement.getAttribute('data-theme') === 'dark' ? '#1e293b' : '#ffffff',
-                        color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#f8fafc' : '#0f172a'
+                        background: document.documentElement.getAttribute('data-theme') === 'dark' ? '#141f38' : '#ffffff',
+                        color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#faf7f0' : '#141f38'
                     });
                 }
             });
